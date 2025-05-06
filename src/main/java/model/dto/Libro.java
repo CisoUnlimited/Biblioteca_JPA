@@ -11,22 +11,30 @@ public class Libro {
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @Lob
     @Column(name = "nombre")
     private String nombre;
 
-    @Lob
     @Column(name = "autor")
     private String autor;
 
-    @Lob
     @Column(name = "editorial")
     private String editorial;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "categoria")
-    private Categoria categoria;
+    private Integer categoria;
+
+    public Libro() {
+    }
+
+    public Libro(Integer id, String nombre, String autor, String editorial, int categoria) {
+        this.id = id;
+        this.nombre = nombre;
+        this.autor = autor;
+        this.editorial = editorial;
+        this.categoria = categoria;
+    }
 
     public Integer getId() {
         return id;
@@ -60,11 +68,11 @@ public class Libro {
         this.editorial = editorial;
     }
 
-    public Categoria getCategoria() {
+    public Integer getCategoria() {
         return categoria;
     }
 
-    public void setCategoria(Categoria categoria) {
+    public void setCategoria(Integer categoria) {
         this.categoria = categoria;
     }
 

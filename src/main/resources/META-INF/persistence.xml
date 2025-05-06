@@ -4,10 +4,20 @@
              xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_2.xsd"
              version="3.2">
     <persistence-unit name="default">
-
         <class>model.dto.Categoria</class>
         <class>model.dto.Libro</class>
         <class>model.dto.Prestamo</class>
         <class>model.dto.Usuario</class>
+        <properties>
+            <property name="hibernate.connection.url"
+                      value="jdbc:mariadb://localhost:3306/biblioteca"/>
+            <property name="hibernate.connection.driver_class"
+                      value="org.mariadb.jdbc.Driver"/>
+            <property name="hibernate.connection.username" value="root"/>
+            <property name="hibernate.connection.password" value=""/>
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.transaction.jta.platform"
+                      value="org.hibernate.engine.transaction.jta.platform.internal.JBossStandAloneJtaPlatform"/>
+        </properties>
     </persistence-unit>
 </persistence>

@@ -9,13 +9,21 @@ public class Usuario {
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @Lob
     @Column(name = "nombre")
     private String nombre;
 
-    @Lob
     @Column(name = "apellidos")
     private String apellidos;
+
+    public Usuario() {
+
+    }
+
+    public Usuario(Integer id, String nombre, String apellidos) {
+        this.id = id;
+        this.nombre = nombre;
+        this.apellidos = apellidos;
+    }
 
     public Integer getId() {
         return id;

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import java.sql.Timestamp;
 import java.time.Instant;
 
 @Entity
@@ -24,7 +25,17 @@ public class Prestamo {
     private Usuario idUsuario;
 
     @Column(name = "fechaPrestamo")
-    private Instant fechaPrestamo;
+    private Timestamp fechaPrestamo;
+
+    public Prestamo() {
+    }
+
+    public Prestamo(Integer id, Libro idLibro, Usuario idUsuario, Timestamp fechaPrestamo) {
+        this.id = id;
+        this.idLibro = idLibro;
+        this.idUsuario = idUsuario;
+        this.fechaPrestamo = fechaPrestamo;
+    }
 
     public Integer getId() {
         return id;
@@ -50,11 +61,11 @@ public class Prestamo {
         this.idUsuario = idUsuario;
     }
 
-    public Instant getFechaPrestamo() {
+    public Timestamp getFechaPrestamo() {
         return fechaPrestamo;
     }
 
-    public void setFechaPrestamo(Instant fechaPrestamo) {
+    public void setFechaPrestamo(Timestamp fechaPrestamo) {
         this.fechaPrestamo = fechaPrestamo;
     }
 

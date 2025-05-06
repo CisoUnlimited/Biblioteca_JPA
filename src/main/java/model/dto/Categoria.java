@@ -9,9 +9,16 @@ public class Categoria {
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @Lob
     @Column(name = "categoria")
     private String categoria;
+
+    public Categoria() {
+    }
+
+    public Categoria(Integer id, String categoria) {
+        this.id = id;
+        this.categoria = categoria;
+    }
 
     public Integer getId() {
         return id;

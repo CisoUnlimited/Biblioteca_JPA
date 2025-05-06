@@ -1,5 +1,9 @@
 package model.database.daoimpl;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.Persistence;
 import model.dto.Usuario;
 import model.database.dao.UsuarioDAO;
 import java.sql.Connection;
@@ -23,6 +27,23 @@ public class UsuarioDAOImpl implements UsuarioDAO {
 
     @Override
     public boolean create(Usuario usuario) {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("default");
+        EntityManager em = emf.createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+
+        try {
+            tx.begin();
+            usuario.setNombre(usuario.getNombre());
+            usuario.setApellidos(usuario.getApellidos());
+            em.persist(usuario);
+            tx.commit();
+        } finally {
+            if (tx.isActive()) {
+                tx.rollback();
+            }
+            em.close();
+            emf.close();
+        }
         return false;
     }
 
