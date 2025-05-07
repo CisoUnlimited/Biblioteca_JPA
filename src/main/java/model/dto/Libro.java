@@ -23,12 +23,12 @@ public class Libro {
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "categoria")
-    private Integer categoria;
+    private Categoria categoria;
 
     public Libro() {
     }
 
-    public Libro(Integer id, String nombre, String autor, String editorial, int categoria) {
+    public Libro(Integer id, String nombre, String autor, String editorial, Categoria categoria) {
         this.id = id;
         this.nombre = nombre;
         this.autor = autor;
@@ -68,12 +68,22 @@ public class Libro {
         this.editorial = editorial;
     }
 
-    public Integer getCategoria() {
+    public Categoria getCategoria() {
         return categoria;
     }
 
-    public void setCategoria(Integer categoria) {
+    public void setCategoria(Categoria categoria) {
         this.categoria = categoria;
     }
 
+    @Override
+    public String toString() {
+        return "Libro{" +
+                "id=" + id +
+                ", nombre='" + nombre + '\'' +
+                ", autor='" + autor + '\'' +
+                ", editorial='" + editorial + '\'' +
+                ", categoria=" + categoria +
+                '}';
+    }
 }

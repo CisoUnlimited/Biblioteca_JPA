@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 @Table(name = "usuario", schema = "biblioteca")
 public class Usuario {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Integer id;
 
@@ -19,8 +20,7 @@ public class Usuario {
 
     }
 
-    public Usuario(Integer id, String nombre, String apellidos) {
-        this.id = id;
+    public Usuario(String nombre, String apellidos) {
         this.nombre = nombre;
         this.apellidos = apellidos;
     }
@@ -49,4 +49,12 @@ public class Usuario {
         this.apellidos = apellidos;
     }
 
+    @Override
+    public String toString() {
+        return "Usuario{" +
+                "id=" + id +
+                ", nombre='" + nombre + '\'' +
+                ", apellidos='" + apellidos + '\'' +
+                '}';
+    }
 }

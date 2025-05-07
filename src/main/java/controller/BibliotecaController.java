@@ -1,5 +1,6 @@
 package controller;
 
+import model.database.ConnectionSingleton;
 import model.database.dao.CategoriaDAO;
 import model.database.dao.LibroDAO;
 import model.database.dao.PrestamoDAO;
@@ -12,6 +13,7 @@ import model.dto.Categoria;
 import model.dto.Libro;
 import model.dto.Prestamo;
 import model.dto.Usuario;
+import utils.JPAUtil;
 import view.Formatters;
 import view.Menu;
 
@@ -34,6 +36,18 @@ public class BibliotecaController {
         this.usuarioDAO = new UsuarioDAOImpl(connection);
         this.categoriaDAO = new CategoriaDAOImpl(connection);
         this.menu = new Menu();
+    }
+
+    public static void main(String[] args) {
+
+        try (Scanner scanner = new Scanner(System.in)) {
+            Connection connection = ConnectionSingleton.getConnection(scanner);
+            BibliotecaController controller = new BibliotecaController(connection);
+            controller.logicaMenuBiblioteca(scanner);
+            JPAUtil.close();
+            ConnectionSingleton.closeConnection();
+        }
+
     }
 
     public void logicaMenuBiblioteca(Scanner scanner) {
@@ -198,7 +212,7 @@ public class BibliotecaController {
         System.out.print("Apellidos: ");
         String apellidos = scanner.nextLine();
 
-        Usuario nuevoUsuario = new Usuario(0, nombre, apellidos);
+        Usuario nuevoUsuario = new Usuario(nombre, apellidos);
         try {
             if (usuarioDAO.create(nuevoUsuario)) {
                 System.out.println("Nuevo usuario agregado con éxito.");
@@ -216,7 +230,6 @@ public class BibliotecaController {
             System.out.print("ID del usuario a eliminar: ");
             int id = scanner.nextInt();
             scanner.nextLine();
-
             if (usuarioDAO.delete(id)) {
                 System.out.println("Usuario eliminado con éxito.");
             } else {
@@ -232,13 +245,14 @@ public class BibliotecaController {
             System.out.print("ID del usuario a modificar: ");
             int id = scanner.nextInt();
             scanner.nextLine();  // Limpiar buffer
+            // TODO: Método que busque un usuario por su ID y devuelva un bool si lo encuentra o no
 
             System.out.print("Nuevo nombre: ");
             String nombre = scanner.nextLine();
             System.out.print("Nuevos apellidos: ");
-            String autor = scanner.nextLine();
+            String apellidos = scanner.nextLine();
 
-            Usuario usuarioModificado = new Usuario(id, nombre, autor);
+            Usuario usuarioModificado = new Usuario(nombre, apellidos);
             if (usuarioDAO.update(id, usuarioModificado)) {
                 System.out.println("Usuario modificado con éxito.");
             } else {
@@ -272,15 +286,15 @@ public class BibliotecaController {
         System.out.print("Editorial: ");
         String editorial = scanner.nextLine();
         System.out.print("Categoría (ID): ");
-        int categoria = scanner.nextInt();
+        // TODO: Método que, a partir de un ID proporcionado, devuelva una Categoria
         scanner.nextLine();
 
-        Libro nuevoLibro = new Libro(0, nombre, autor, editorial, categoria);
-        if (libroDAO.create(nuevoLibro)) {
-            System.out.println("Libro agregado con éxito.");
-        } else {
-            System.out.println("Error al agregar el libro.");
-        }
+//        Libro nuevoLibro = new Libro(0, nombre, autor, editorial, categoria);
+//        if (libroDAO.create(nuevoLibro)) {
+//            System.out.println("Libro agregado con éxito.");
+//        } else {
+//            System.out.println("Error al agregar el libro.");
+//        }
     }
 
     private void bajaLibro(Scanner scanner) {
@@ -316,13 +330,13 @@ public class BibliotecaController {
             int categoria = scanner.nextInt(); // Si aquí introduzco una letra, sube el error al menú y lanza inputMismatchException
             scanner.nextLine();
 
-            Libro libroModificado = new Libro(id, nombre, autor, editorial, categoria);
-            if (libroDAO.update(id, libroModificado)) {
-                System.out.println("Libro modificado con éxito.");
-            } else {
-                System.out.println("Al menos uno de los dos siguientes elementos no existe en la base de datos: 'ID del libro', 'ID de la categoría'.");
-                System.out.println("Error al modificar el libro.");
-            }
+//            Libro libroModificado = new Libro(id, nombre, autor, editorial, categoria);
+//            if (libroDAO.update(id, libroModificado)) {
+//                System.out.println("Libro modificado con éxito.");
+//            } else {
+//                System.out.println("Al menos uno de los dos siguientes elementos no existe en la base de datos: 'ID del libro', 'ID de la categoría'.");
+//                System.out.println("Error al modificar el libro.");
+//            }
         }
     }
 
@@ -422,14 +436,14 @@ public class BibliotecaController {
         }
 
         Timestamp fechaPrestamo = new Timestamp(System.currentTimeMillis());
-        Prestamo prestamo = new Prestamo(0, idLibro, idUsuario, fechaPrestamo);
-
-        if (prestamoDAO.create(prestamo)) {
-            System.out.println("Préstamo registrado con éxito.");
-        } else {
-            System.out.println("Al menos uno de los dos siguientes elementos no existe en la base de datos: 'ID del libro', 'ID del usuario'.");
-            System.out.println("Error al registrar el préstamo.");
-        }
+//        Prestamo prestamo = new Prestamo(0, idLibro, idUsuario, fechaPrestamo);
+//
+//        if (prestamoDAO.create(prestamo)) {
+//            System.out.println("Préstamo registrado con éxito.");
+//        } else {
+//            System.out.println("Al menos uno de los dos siguientes elementos no existe en la base de datos: 'ID del libro', 'ID del usuario'.");
+//            System.out.println("Error al registrar el préstamo.");
+//        }
     }
 
     private void bajaPrestamo(Scanner scanner) {
@@ -479,14 +493,14 @@ public class BibliotecaController {
             } else {
                 fechaPrestamo = Formatters.dateTimestampFormatter(nuevaFechaPrestamo);
             }
-            Prestamo newPrestamo = new Prestamo(idPrestamo, idLibro, idUsuario, fechaPrestamo);
-
-            if (prestamoDAO.update(idPrestamo, newPrestamo)) {
-                System.out.println("Préstamo modificado con éxito.");
-            } else {
-                System.out.println("Al menos uno de los dos siguientes elementos no existe en la base de datos: 'ID del libro', 'ID del usuario'.");
-                System.out.println("Error al modificar el préstamo.");
-            }
+//            Prestamo newPrestamo = new Prestamo(idPrestamo, idLibro, idUsuario, fechaPrestamo);
+//
+//            if (prestamoDAO.update(idPrestamo, newPrestamo)) {
+//                System.out.println("Préstamo modificado con éxito.");
+//            } else {
+//                System.out.println("Al menos uno de los dos siguientes elementos no existe en la base de datos: 'ID del libro', 'ID del usuario'.");
+//                System.out.println("Error al modificar el préstamo.");
+//            }
         }
     }
 

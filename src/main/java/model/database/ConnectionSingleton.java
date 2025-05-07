@@ -21,7 +21,6 @@ public class ConnectionSingleton {
      * activa, la reutiliza.
      *
      * @return Conexión a la base de datos
-     * @throws SQLException Si ocurre un error al conectar
      */
     public static java.sql.Connection getConnection(Scanner scanner) {
         try {
@@ -47,7 +46,6 @@ public class ConnectionSingleton {
     /**
      * Cierra la conexión a la base de datos si está activa.
      *
-     * @throws SQLException Si ocurre un error al cerrar la conexión
      */
     public static void closeConnection() {
         try {
