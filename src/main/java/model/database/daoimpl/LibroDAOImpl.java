@@ -1,11 +1,13 @@
 package model.database.daoimpl;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.Query;
 import model.dto.Libro;
 import model.database.dao.LibroDAO;
+import utils.JPAUtil;
+
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,12 +25,36 @@ public class LibroDAOImpl implements LibroDAO {
 
     @Override
     public boolean create(Libro libro) {
-        return false;
+        try (EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager()) {
+            EntityTransaction tx = em.getTransaction();
+            try {
+                tx.begin();
+                libro.setNombre(libro.getNombre());
+                libro.setAutor(libro.getAutor());
+                libro.setEditorial(libro.getEditorial());
+                libro.setCategoria(libro.getCategoria());
+                em.persist(libro);
+                tx.commit();
+                return true;
+            } catch (Exception e) {
+                if (tx.isActive()) {
+                    tx.rollback();
+                }
+                e.printStackTrace();
+                return false;
+            }
+        }
     }
 
     @Override
     public List<Libro> read() {
-        return null;
+        try (EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager()) {
+            Query q = em.createQuery("SELECT l FROM Libro l");
+            return q.getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
     }
 
     @Override
@@ -39,6 +65,13 @@ public class LibroDAOImpl implements LibroDAO {
     @Override
     public boolean delete(int id) {
         return false;
+    }
+
+    @Override
+    public boolean find(int id) {
+        try (EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager()) {
+            return em.find(Libro.class, id) != null;
+        }
     }
 
 }

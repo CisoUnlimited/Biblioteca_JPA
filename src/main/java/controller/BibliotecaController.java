@@ -58,16 +58,11 @@ public class BibliotecaController {
             scanner.nextLine();
             try {
                 switch (opcion) {
-                    case 1 ->
-                            logicaSubmenuUsuarios(scanner);
-                    case 2 ->
-                            logicaSubmenuLibros(scanner);
-                    case 3 ->
-                            logicaSubmenuPrestamos(scanner);
-                    case 0 ->
-                            salir = true;
-                    default ->
-                            System.out.println("Opción no válida. Por favor, intente nuevamente.");
+                    case 1 -> logicaSubmenuUsuarios(scanner);
+                    case 2 -> logicaSubmenuLibros(scanner);
+                    case 3 -> logicaSubmenuPrestamos(scanner);
+                    case 0 -> salir = true;
+                    default -> System.out.println("Opción no válida. Por favor, intente nuevamente.");
                 }
             } catch (InputMismatchException e) {
                 System.out.println("Error en el menú Biblioteca: Por favor, ingrese un número.");
@@ -84,18 +79,12 @@ public class BibliotecaController {
             scanner.nextLine();
             try {
                 switch (opcion) {
-                    case 1 ->
-                            consultarUsuarios();
-                    case 2 ->
-                            altaUsuario(scanner);
-                    case 3 ->
-                            bajaUsuario(scanner);
-                    case 4 ->
-                            modificarUsuario(scanner);
-                    case 0 ->
-                            volver = true;
-                    default ->
-                            System.out.println("Opción no válida. Por favor, intente nuevamente.");
+                    case 1 -> consultarUsuarios();
+                    case 2 -> altaUsuario(scanner);
+                    case 3 -> bajaUsuario(scanner);
+                    case 4 -> modificarUsuario(scanner);
+                    case 0 -> volver = true;
+                    default -> System.out.println("Opción no válida. Por favor, intente nuevamente.");
                 }
             } catch (InputMismatchException e) {
                 System.out.println("Error en el menú Usuarios: Por favor, ingrese un número.");
@@ -112,20 +101,13 @@ public class BibliotecaController {
             scanner.nextLine();
             try {
                 switch (opcion) {
-                    case 1 ->
-                            consultarLibros();
-                    case 2 ->
-                            altaLibro(scanner);
-                    case 3 ->
-                            bajaLibro(scanner);
-                    case 4 ->
-                            modificarLibro(scanner);
-                    case 5 ->
-                            logicaSubmenuCategorias(scanner);
-                    case 0 ->
-                            volver = true;
-                    default ->
-                            System.out.println("Opción no válida. Por favor, intente nuevamente.");
+                    case 1 -> consultarLibros();
+                    case 2 -> altaLibro(scanner);
+                    case 3 -> bajaLibro(scanner);
+                    case 4 -> modificarLibro(scanner);
+                    case 5 -> logicaSubmenuCategorias(scanner);
+                    case 0 -> volver = true;
+                    default -> System.out.println("Opción no válida. Por favor, intente nuevamente.");
                 }
             } catch (InputMismatchException e) {
                 System.out.println("Error en el menú Libros: Por favor, ingrese un número.");
@@ -142,18 +124,12 @@ public class BibliotecaController {
             scanner.nextLine();
             try {
                 switch (opcion) {
-                    case 1 ->
-                            consultarCategorias();
-                    case 2 ->
-                            altaCategoria(scanner);
-                    case 3 ->
-                            bajaCategoria(scanner);
-                    case 4 ->
-                            modificarCategoria(scanner);
-                    case 0 ->
-                            volver = true;
-                    default ->
-                            System.out.println("Opción no válida. Por favor, intente nuevamente.");
+                    case 1 -> consultarCategorias();
+                    case 2 -> altaCategoria(scanner);
+                    case 3 -> bajaCategoria(scanner);
+                    case 4 -> modificarCategoria(scanner);
+                    case 0 -> volver = true;
+                    default -> System.out.println("Opción no válida. Por favor, intente nuevamente.");
                 }
             } catch (InputMismatchException e) {
                 System.out.println("Error en el menú Categorías: Por favor, ingrese un número.");
@@ -170,18 +146,12 @@ public class BibliotecaController {
             scanner.nextLine();
             try {
                 switch (opcion) {
-                    case 1 ->
-                            consultarPrestamos();
-                    case 2 ->
-                            altaPrestamo(scanner);
-                    case 3 ->
-                            bajaPrestamo(scanner);
-                    case 4 ->
-                            modificarPrestamo(scanner);
-                    case 0 ->
-                            volver = true;
-                    default ->
-                            System.out.println("Opción no válida. Por favor, intente nuevamente.");
+                    case 1 -> consultarPrestamos();
+                    case 2 -> altaPrestamo(scanner);
+                    case 3 -> bajaPrestamo(scanner);
+                    case 4 -> modificarPrestamo(scanner);
+                    case 0 -> volver = true;
+                    default -> System.out.println("Opción no válida. Por favor, intente nuevamente.");
                 }
             } catch (InputMismatchException e) {
                 System.out.println("Error en el menú Préstamos: Por favor, ingrese un número.");
@@ -230,11 +200,14 @@ public class BibliotecaController {
             System.out.print("ID del usuario a eliminar: ");
             int id = scanner.nextInt();
             scanner.nextLine();
-            if (usuarioDAO.delete(id)) {
-                System.out.println("Usuario eliminado con éxito.");
+            if (usuarioDAO.find(id)) {
+                if (usuarioDAO.delete(id)) {
+                    System.out.println("Usuario eliminado con éxito.");
+                } else {
+                    System.out.println("Error al eliminar el usuario.");
+                }
             } else {
                 System.out.println("El ID introducido no se encuentra en la base de datos.");
-                System.out.println("Error al eliminar el usuario.");
             }
         }
     }
@@ -245,18 +218,21 @@ public class BibliotecaController {
             System.out.print("ID del usuario a modificar: ");
             int id = scanner.nextInt();
             scanner.nextLine();  // Limpiar buffer
-            // TODO: Método que busque un usuario por su ID y devuelva un bool si lo encuentra o no
 
-            System.out.print("Nuevo nombre: ");
-            String nombre = scanner.nextLine();
-            System.out.print("Nuevos apellidos: ");
-            String apellidos = scanner.nextLine();
+            if (usuarioDAO.find(id)) {
+                System.out.print("Nuevo nombre: ");
+                String nombre = scanner.nextLine();
+                System.out.print("Nuevos apellidos: ");
+                String apellidos = scanner.nextLine();
 
-            Usuario usuarioModificado = new Usuario(nombre, apellidos);
-            if (usuarioDAO.update(id, usuarioModificado)) {
-                System.out.println("Usuario modificado con éxito.");
+                Usuario usuarioModificado = new Usuario(nombre, apellidos);
+                if (usuarioDAO.update(id, usuarioModificado)) {
+                    System.out.println("Usuario modificado con éxito.");
+                } else {
+                    System.out.println("Error al modificar el usuario.");
+                }
             } else {
-                System.out.println("Error al modificar el usuario.");
+                System.out.println("El ID introducido no existe.");
             }
         }
     }
@@ -286,15 +262,21 @@ public class BibliotecaController {
         System.out.print("Editorial: ");
         String editorial = scanner.nextLine();
         System.out.print("Categoría (ID): ");
-        // TODO: Método que, a partir de un ID proporcionado, devuelva una Categoria
-        scanner.nextLine();
+        int id = scanner.nextInt();
+        while (!categoriaDAO.find(id)) {
+            System.out.println("El ID introducido no existe. Vuelva a intentarlo.");
+            System.out.print("Categoría (ID): ");
+            id = scanner.nextInt();
+            scanner.nextLine();
+        }
+        Categoria categoria = categoriaDAO.getCategoria(id);
+        Libro nuevoLibro = new Libro(0, nombre, autor, editorial, categoria);
+        if (libroDAO.create(nuevoLibro)) {
+            System.out.println("Libro agregado con éxito.");
+        } else {
+            System.out.println("Error al agregar el libro.");
+        }
 
-//        Libro nuevoLibro = new Libro(0, nombre, autor, editorial, categoria);
-//        if (libroDAO.create(nuevoLibro)) {
-//            System.out.println("Libro agregado con éxito.");
-//        } else {
-//            System.out.println("Error al agregar el libro.");
-//        }
     }
 
     private void bajaLibro(Scanner scanner) {
@@ -303,6 +285,11 @@ public class BibliotecaController {
             System.out.print("ID del libro a borrar: ");
             int id = scanner.nextInt();
             scanner.nextLine();
+            // TODO: Método que confirme si existe un libro dado un id
+            while (!libroDAO.find(id)) {
+
+            }
+
 
             if (libroDAO.delete(id)) {
                 System.out.println("Libro eliminado con éxito.");

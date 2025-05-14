@@ -17,4 +17,6 @@ public interface UsuarioDAO {
 
     boolean delete(int id);
 
+    boolean find(int id);
+
 }

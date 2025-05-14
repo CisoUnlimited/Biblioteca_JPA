@@ -1,7 +1,11 @@
 package model.database.daoimpl;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
 import model.dto.Categoria;
 import model.database.dao.CategoriaDAO;
+import utils.JPAUtil;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -28,7 +32,13 @@ public class CategoriaDAOImpl implements CategoriaDAO {
 
     @Override
     public List<Categoria> read() {
-        return null;
+        try (EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager()) {
+            Query q = em.createQuery("SELECT c FROM Categoria c");
+            return q.getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
     }
 
     @Override
@@ -40,5 +50,25 @@ public class CategoriaDAOImpl implements CategoriaDAO {
     public boolean delete(int id) {
         return false;
     }
+
+    @Override
+    public boolean find(int id) {
+        try (EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager()) {
+            return em.find(Categoria.class, id) != null;
+        }
+    }
+
+
+    @Override
+    public Categoria getCategoria(int id) {
+        try (EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager()) {
+            Categoria categoria = em.find(Categoria.class, id);
+            return categoria;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 
 }

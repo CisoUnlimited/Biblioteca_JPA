@@ -20,7 +20,7 @@ public class Libro {
     @Column(name = "editorial")
     private String editorial;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "categoria")
     private Categoria categoria;

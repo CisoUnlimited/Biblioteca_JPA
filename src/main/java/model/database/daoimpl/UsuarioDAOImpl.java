@@ -6,9 +6,6 @@ import model.database.dao.UsuarioDAO;
 import utils.JPAUtil;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +30,6 @@ public class UsuarioDAOImpl implements UsuarioDAO {
                 usuario.setNombre(usuario.getNombre());
                 usuario.setApellidos(usuario.getApellidos());
                 em.persist(usuario);
-                //em.flush();
                 tx.commit();
                 return true;
             } catch (Exception e) {
@@ -65,7 +61,6 @@ public class UsuarioDAOImpl implements UsuarioDAO {
             Usuario usuario = em.find(Usuario.class, id);
             usuario.setNombre(usuarioModificado.getNombre());
             usuario.setApellidos(usuarioModificado.getApellidos());
-            em.merge(usuario);
             tx.commit();
             return true;
         } catch (Exception e) {
@@ -91,5 +86,19 @@ public class UsuarioDAOImpl implements UsuarioDAO {
             return false;
         }
     }
+
+    @Override
+    public boolean find(int id) {
+        try(EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager()) {
+            if (em.find(Usuario.class, id) != null) {
+                return true;
+            }
+            return false;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 
 }

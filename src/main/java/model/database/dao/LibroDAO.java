@@ -17,4 +17,6 @@ public interface LibroDAO {
 
     boolean delete(int id);
 
+    boolean find(int id);
+
 }
