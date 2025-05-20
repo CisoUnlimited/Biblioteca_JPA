@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 @Table(name = "categoria", schema = "biblioteca")
 public class Categoria {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Integer id;
 
@@ -15,8 +16,7 @@ public class Categoria {
     public Categoria() {
     }
 
-    public Categoria(Integer id, String categoria) {
-        this.id = id;
+    public Categoria(String categoria) {
         this.categoria = categoria;
     }
 

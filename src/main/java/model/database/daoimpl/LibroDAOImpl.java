@@ -5,6 +5,7 @@ import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Query;
 import model.dto.Libro;
 import model.database.dao.LibroDAO;
+import model.dto.Usuario;
 import utils.JPAUtil;
 
 import java.sql.Connection;
@@ -58,13 +59,39 @@ public class LibroDAOImpl implements LibroDAO {
     }
 
     @Override
-    public boolean update(int id, Libro libro) {
-        return false;
+    public boolean update(int id, Libro libroModificado) {
+        try (EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager()) {
+            EntityTransaction tx = em.getTransaction();
+            tx.begin();
+            Libro libro = em.find(Libro.class, id);
+            libro.setNombre(libroModificado.getNombre());
+            libro.setAutor(libroModificado.getAutor());
+            libro.setEditorial(libroModificado.getEditorial());
+            libro.setCategoria(libroModificado.getCategoria());
+            tx.commit();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     @Override
     public boolean delete(int id) {
-        return false;
+        try (EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager()) {
+            EntityTransaction tx = em.getTransaction();
+            tx.begin();
+            Libro libro = em.find(Libro.class, id);
+            if (libro != null) {
+                System.out.println(libro);
+                em.remove(libro);
+            }
+            tx.commit();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     @Override

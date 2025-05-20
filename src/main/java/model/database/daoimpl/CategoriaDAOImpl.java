@@ -1,9 +1,11 @@
 package model.database.daoimpl;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Query;
 import model.dto.Categoria;
 import model.database.dao.CategoriaDAO;
+import model.dto.Libro;
 import utils.JPAUtil;
 
 import java.sql.Connection;
@@ -27,7 +29,22 @@ public class CategoriaDAOImpl implements CategoriaDAO {
 
     @Override
     public boolean create(Categoria categoria) {
-        return true;
+        try (EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager()) {
+            EntityTransaction tx = em.getTransaction();
+            try {
+                tx.begin();
+                categoria.setCategoria(categoria.getCategoria());
+                em.persist(categoria);
+                tx.commit();
+                return true;
+            } catch (Exception e) {
+                if (tx.isActive()) {
+                    tx.rollback();
+                }
+                e.printStackTrace();
+                return false;
+            }
+        }
     }
 
     @Override
@@ -42,13 +59,36 @@ public class CategoriaDAOImpl implements CategoriaDAO {
     }
 
     @Override
-    public boolean update(int id, Categoria categoria) {
-        return false;
+    public boolean update(int id, Categoria categoriaModificada) {
+        try (EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager()) {
+            EntityTransaction tx = em.getTransaction();
+            tx.begin();
+            Categoria categoria = em.find(Categoria.class, id);
+            categoria.setCategoria(categoriaModificada.getCategoria());
+            tx.commit();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     @Override
     public boolean delete(int id) {
-        return false;
+        try (EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager()) {
+            EntityTransaction tx = em.getTransaction();
+            tx.begin();
+            Categoria categoria = em.find(Categoria.class, id);
+            if (categoria != null) {
+                System.out.println(categoria);
+                em.remove(categoria);
+            }
+            tx.commit();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     @Override

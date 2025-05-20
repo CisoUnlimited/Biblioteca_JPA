@@ -262,14 +262,14 @@ public class BibliotecaController {
         System.out.print("Editorial: ");
         String editorial = scanner.nextLine();
         System.out.print("Categoría (ID): ");
-        int id = scanner.nextInt();
-        while (!categoriaDAO.find(id)) {
-            System.out.println("El ID introducido no existe. Vuelva a intentarlo.");
+        int categoriaID = scanner.nextInt();
+        while (!categoriaDAO.find(categoriaID)) {
+            System.out.println("El ID de categoría introducido no existe. Vuelva a intentarlo.");
             System.out.print("Categoría (ID): ");
-            id = scanner.nextInt();
+            categoriaID = scanner.nextInt();
             scanner.nextLine();
         }
-        Categoria categoria = categoriaDAO.getCategoria(id);
+        Categoria categoria = categoriaDAO.getCategoria(categoriaID);
         Libro nuevoLibro = new Libro(0, nombre, autor, editorial, categoria);
         if (libroDAO.create(nuevoLibro)) {
             System.out.println("Libro agregado con éxito.");
@@ -285,17 +285,15 @@ public class BibliotecaController {
             System.out.print("ID del libro a borrar: ");
             int id = scanner.nextInt();
             scanner.nextLine();
-            // TODO: Método que confirme si existe un libro dado un id
-            while (!libroDAO.find(id)) {
-
-            }
-
-
-            if (libroDAO.delete(id)) {
-                System.out.println("Libro eliminado con éxito.");
+            if (libroDAO.find(id)) {
+                if (libroDAO.delete(id)) {
+                    System.out.println("Libro eliminado con éxito.");
+                } else {
+                    System.out.println("El ID introducido no se encuentra en la base de datos.");
+                    System.out.println("Error al eliminar el libro.");
+                }
             } else {
                 System.out.println("El ID introducido no se encuentra en la base de datos.");
-                System.out.println("Error al eliminar el libro.");
             }
         }
     }
@@ -306,24 +304,38 @@ public class BibliotecaController {
             System.out.print("ID del libro a modificar: ");
             int id = scanner.nextInt();
             scanner.nextLine();  // Limpiar buffer
-
+            while (!libroDAO.find(id)) {
+                System.out.println("El ID introducido no se encuentra en la base de datos. Pruebe de nuevo");
+                consultarLibros();
+                System.out.print("ID del libro a modificar: ");
+                id = scanner.nextInt();
+                scanner.nextLine();
+            }
             System.out.print("Nuevo nombre: ");
             String nombre = scanner.nextLine();
             System.out.print("Nuevo autor: ");
             String autor = scanner.nextLine();
             System.out.print("Nueva editorial: ");
             String editorial = scanner.nextLine();
+            consultarCategorias();
             System.out.print("Nueva categoría (ID): ");
-            int categoria = scanner.nextInt(); // Si aquí introduzco una letra, sube el error al menú y lanza inputMismatchException
+            int categoriaID = scanner.nextInt();
             scanner.nextLine();
-
-//            Libro libroModificado = new Libro(id, nombre, autor, editorial, categoria);
-//            if (libroDAO.update(id, libroModificado)) {
-//                System.out.println("Libro modificado con éxito.");
-//            } else {
-//                System.out.println("Al menos uno de los dos siguientes elementos no existe en la base de datos: 'ID del libro', 'ID de la categoría'.");
-//                System.out.println("Error al modificar el libro.");
-//            }
+            while (!categoriaDAO.find(id)) {
+                System.out.println("El ID de categoría introducido no existe. Vuelva a intentarlo.");
+                consultarCategorias();
+                System.out.print("Nueva categoría (ID): ");
+                id = scanner.nextInt();
+                scanner.nextLine();
+            }
+            Categoria categoria = categoriaDAO.getCategoria(id);
+            Libro libroModificado = new Libro(id, nombre, autor, editorial, categoria);
+            if (libroDAO.update(id, libroModificado)) {
+                System.out.println("Libro modificado con éxito.");
+            } else {
+                System.out.println("Al menos uno de los dos siguientes elementos no existe en la base de datos: 'ID del libro', 'ID de la categoría'.");
+                System.out.println("Error al modificar el libro.");
+            }
         }
     }
 
@@ -346,8 +358,7 @@ public class BibliotecaController {
         System.out.println("\n--- Dar de alta nueva categoría ---");
         System.out.print("Nombre: ");
         String categoria = scanner.nextLine();
-
-        Categoria nuevaCategoria = new Categoria(0, categoria);
+        Categoria nuevaCategoria = new Categoria(categoria);
         if (categoriaDAO.create(nuevaCategoria)) {
             System.out.println("Categoría agregada con éxito.");
         } else {
@@ -361,11 +372,14 @@ public class BibliotecaController {
             System.out.print("ID de la categoría a eliminar: ");
             int id = scanner.nextInt();
             scanner.nextLine();
-
-            if (categoriaDAO.delete(id)) {
-                System.out.println("Categoría eliminada con éxito.");
+            if (categoriaDAO.find(id)) {
+                if (categoriaDAO.delete(id)) {
+                    System.out.println("Categoría eliminada con éxito.");
+                } else {
+                    System.out.println("Error al eliminar la categoría.");
+                }
             } else {
-                System.out.println("Error al eliminar la categoría.");
+                System.out.println("El ID introducido no se encuentra en la base de datos.");
             }
         }
     }
@@ -376,15 +390,20 @@ public class BibliotecaController {
             System.out.print("ID de la categoría a modificar: ");
             int id = scanner.nextInt();
             scanner.nextLine();  // Limpiar buffer
-
+            while (!categoriaDAO.find(id)) {
+                System.out.println("El ID de categoría introducido no existe. Vuelva a intentarlo.");
+                consultarCategorias();
+                System.out.print("ID de la categoría a modificar: ");
+                id = scanner.nextInt();
+                scanner.nextLine();
+            }
             System.out.print("Nuevo nombre: ");
             String nombre = scanner.nextLine();
 
-            Categoria categoriaModificada = new Categoria(id, nombre);
+            Categoria categoriaModificada = new Categoria(nombre);
             if (categoriaDAO.update(id, categoriaModificada)) {
                 System.out.println("Categoría modificada con éxito.");
             } else {
-
                 System.out.println("Error al modificar la categoría.");
             }
         }
