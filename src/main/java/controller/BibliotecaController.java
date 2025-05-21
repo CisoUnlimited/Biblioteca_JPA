@@ -270,7 +270,7 @@ public class BibliotecaController {
             scanner.nextLine();
         }
         Categoria categoria = categoriaDAO.getCategoria(categoriaID);
-        Libro nuevoLibro = new Libro(0, nombre, autor, editorial, categoria);
+        Libro nuevoLibro = new Libro(nombre, autor, editorial, categoria);
         if (libroDAO.create(nuevoLibro)) {
             System.out.println("Libro agregado con éxito.");
         } else {
@@ -321,15 +321,15 @@ public class BibliotecaController {
             System.out.print("Nueva categoría (ID): ");
             int categoriaID = scanner.nextInt();
             scanner.nextLine();
-            while (!categoriaDAO.find(id)) {
+            while (!categoriaDAO.find(categoriaID)) {
                 System.out.println("El ID de categoría introducido no existe. Vuelva a intentarlo.");
                 consultarCategorias();
                 System.out.print("Nueva categoría (ID): ");
-                id = scanner.nextInt();
+                categoriaID = scanner.nextInt();
                 scanner.nextLine();
             }
-            Categoria categoria = categoriaDAO.getCategoria(id);
-            Libro libroModificado = new Libro(id, nombre, autor, editorial, categoria);
+            Categoria categoria = categoriaDAO.getCategoria(categoriaID);
+            Libro libroModificado = new Libro(nombre, autor, editorial, categoria);
             if (libroDAO.update(id, libroModificado)) {
                 System.out.println("Libro modificado con éxito.");
             } else {
@@ -425,31 +425,48 @@ public class BibliotecaController {
 
     private void altaPrestamo(Scanner scanner) {
         consultarPrestamos();
-        consultarUsuarios();
-        consultarLibros();
         System.out.println("\n--- Gestionar préstamo ---");
+
+        consultarLibros();
         System.out.print("ID del libro: ");
         int idLibro = scanner.nextInt();
         scanner.nextLine(); // Limpiar buffer
+        while (!libroDAO.find(idLibro)) {
+            System.out.println("El ID de libro introducido no existe. Vuelva a intentarlo.");
+            consultarLibros();
+            System.out.print("ID del libro: ");
+            idLibro = scanner.nextInt();
+            scanner.nextLine();
+        }
+        Libro libro = libroDAO.getLibro(idLibro);
 
+        consultarUsuarios();
         System.out.print("ID del usuario: ");
         int idUsuario = scanner.nextInt();
         scanner.nextLine(); // Limpiar buffer
+        while (!usuarioDAO.find(idUsuario)) {
+            System.out.println("El ID de usuario introducido no existe. Vuelva a intentarlo.");
+            consultarUsuarios();
+            System.out.print("ID del usuario: ");
+            idUsuario = scanner.nextInt();
+            scanner.nextLine();
+        }
+        Usuario usuario = usuarioDAO.getUsuario(idUsuario);
 
-        if (!prestamoDAO.isAvailable(idLibro)) {
+        if (!prestamoDAO.isAvailable(libro)) {
             System.out.println("El libro ya está prestado.");
             return;
         }
 
         Timestamp fechaPrestamo = new Timestamp(System.currentTimeMillis());
-//        Prestamo prestamo = new Prestamo(0, idLibro, idUsuario, fechaPrestamo);
-//
-//        if (prestamoDAO.create(prestamo)) {
-//            System.out.println("Préstamo registrado con éxito.");
-//        } else {
-//            System.out.println("Al menos uno de los dos siguientes elementos no existe en la base de datos: 'ID del libro', 'ID del usuario'.");
-//            System.out.println("Error al registrar el préstamo.");
-//        }
+        Prestamo prestamo = new Prestamo(libro, usuario, fechaPrestamo);
+
+        if (prestamoDAO.create(prestamo)) {
+            System.out.println("Préstamo registrado con éxito.");
+        } else {
+            System.out.println("Al menos uno de los dos siguientes elementos no existe en la base de datos: 'ID del libro', 'ID del usuario'.");
+            System.out.println("Error al registrar el préstamo.");
+        }
     }
 
     private void bajaPrestamo(Scanner scanner) {
@@ -458,14 +475,9 @@ public class BibliotecaController {
             System.out.print("ID del libro: ");
             int idLibro = scanner.nextInt();
             scanner.nextLine();
-
+            Libro libro = libroDAO.getLibro(idLibro);
             // Verifica si el libro está prestado
-            int idPrestamo = prestamoDAO.getIdPrestamo(idLibro);
-
-            if (idPrestamo == -1) {
-                System.out.println("El libro no está actualmente prestado.");
-                return;
-            }
+            int idPrestamo = prestamoDAO.getIdPrestamo(libro);
 
             // Elimina el préstamo de la base de datos
             if (prestamoDAO.delete(idPrestamo)) {

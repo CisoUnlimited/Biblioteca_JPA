@@ -5,13 +5,9 @@ import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Query;
 import model.dto.Categoria;
 import model.database.dao.CategoriaDAO;
-import model.dto.Libro;
 import utils.JPAUtil;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -5,7 +5,6 @@ import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Query;
 import model.dto.Libro;
 import model.database.dao.LibroDAO;
-import model.dto.Usuario;
 import utils.JPAUtil;
 
 import java.sql.Connection;
@@ -98,6 +97,17 @@ public class LibroDAOImpl implements LibroDAO {
     public boolean find(int id) {
         try (EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager()) {
             return em.find(Libro.class, id) != null;
+        }
+    }
+
+    @Override
+    public Libro getLibro(int id) {
+        try (EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager()) {
+            Libro libro = em.find(Libro.class, id);
+            return libro;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
     }
 

@@ -5,7 +5,6 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import java.sql.Timestamp;
-import java.time.Instant;
 
 @Entity
 @Table(name = "prestamos", schema = "biblioteca")
@@ -15,12 +14,12 @@ public class Prestamo {
     @Column(name = "idPrestamo", nullable = false)
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "idLibro")
     private Libro idLibro;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "idUsuario")
     private Usuario idUsuario;
@@ -31,8 +30,7 @@ public class Prestamo {
     public Prestamo() {
     }
 
-    public Prestamo(Integer id, Libro idLibro, Usuario idUsuario, Timestamp fechaPrestamo) {
-        this.id = id;
+    public Prestamo(Libro idLibro, Usuario idUsuario, Timestamp fechaPrestamo) {
         this.idLibro = idLibro;
         this.idUsuario = idUsuario;
         this.fechaPrestamo = fechaPrestamo;

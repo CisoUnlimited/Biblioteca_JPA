@@ -100,5 +100,14 @@ public class UsuarioDAOImpl implements UsuarioDAO {
         }
     }
 
-
+    @Override
+    public Usuario getUsuario(int id) {
+        try (EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager()) {
+            Usuario usuario = em.find(Usuario.class, id);
+            return usuario;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

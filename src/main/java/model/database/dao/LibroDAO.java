@@ -19,4 +19,6 @@ public interface LibroDAO {
 
     boolean find(int id);
 
+    Libro getLibro(int id);
+
 }

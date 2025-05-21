@@ -30,7 +30,6 @@ public class PrestamoDAOImpl implements PrestamoDAO {
             EntityTransaction tx = em.getTransaction();
             try {
                 tx.begin();
-                prestamo.setId(prestamo.getId());
                 prestamo.setIdLibro(prestamo.getIdLibro());
                 prestamo.setIdUsuario(prestamo.getIdUsuario());
                 prestamo.setFechaPrestamo(prestamo.getFechaPrestamo());
@@ -70,7 +69,6 @@ public class PrestamoDAOImpl implements PrestamoDAO {
             EntityTransaction tx = em.getTransaction();
             tx.begin();
             Prestamo prestamo = em.find(Prestamo.class, id);
-            prestamo.setId(prestamoModificado.getId());
             prestamo.setIdLibro(prestamoModificado.getIdLibro());
             prestamo.setIdUsuario(prestamoModificado.getIdUsuario());
             prestamo.setFechaPrestamo(prestamoModificado.getFechaPrestamo());
@@ -84,17 +82,49 @@ public class PrestamoDAOImpl implements PrestamoDAO {
 
     @Override
     public boolean delete(int idPrestamo) {
-        return false;
+        try (EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager()) {
+            EntityTransaction tx = em.getTransaction();
+            tx.begin();
+            Prestamo prestamo = em.find(Prestamo.class, idPrestamo);
+                System.out.println(prestamo);
+                em.remove(prestamo);
+            tx.commit();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     @Override
-    public boolean isAvailable(int idLibro) {
-        return false;
+    public boolean isAvailable(Libro libro) {
+        try (EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager()) {
+            Query q = em.createQuery("SELECT p FROM Prestamo p where p.idLibro = :idLibro");
+            q.setParameter("idLibro", libro);
+            return q.getResultList().isEmpty();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     @Override
-    public int getIdPrestamo(int idLibro) {
-        return 0;
+    public int getIdPrestamo(Libro libro) {
+        try (EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager()) {
+            int idPrestamo = 0;
+            Query q = em.createQuery("SELECT p.id FROM Prestamo p where p.idLibro = :idLibro");
+            q.setParameter("idLibro", libro);
+            List<Integer> list = q.getResultList();
+            if (list.size() > 0) {
+                return list.get(0);
+            } else {
+                System.out.println("No se encontro el libro");
+                return 9999;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 9999;
+        }
     }
 
 }

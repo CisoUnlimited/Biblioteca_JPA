@@ -1,5 +1,6 @@
 package model.database.dao;
 
+import model.dto.Libro;
 import model.dto.Prestamo;
 import java.util.List;
 
@@ -19,8 +20,8 @@ public interface PrestamoDAO {
 
     boolean delete(int idPrestamo);
 
-    boolean isAvailable(int idLibro);
+    boolean isAvailable(Libro libro);
 
-    int getIdPrestamo(int idLibro);
+    int getIdPrestamo(Libro libro);
 
 }

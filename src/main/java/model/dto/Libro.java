@@ -29,8 +29,7 @@ public class Libro {
     public Libro() {
     }
 
-    public Libro(Integer id, String nombre, String autor, String editorial, Categoria categoria) {
-        this.id = id;
+    public Libro(String nombre, String autor, String editorial, Categoria categoria) {
         this.nombre = nombre;
         this.autor = autor;
         this.editorial = editorial;
