@@ -88,7 +88,7 @@ public class UsuarioDAOImpl implements UsuarioDAO {
     }
 
     @Override
-    public boolean find(int id) {
+    public boolean exists(int id) {
         try(EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager()) {
             if (em.find(Usuario.class, id) != null) {
                 return true;
@@ -101,7 +101,7 @@ public class UsuarioDAOImpl implements UsuarioDAO {
     }
 
     @Override
-    public Usuario getUsuario(int id) {
+    public Usuario readOne(int id) {
         try (EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager()) {
             Usuario usuario = em.find(Usuario.class, id);
             return usuario;

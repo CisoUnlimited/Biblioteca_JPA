@@ -30,10 +30,11 @@ public class Menu {
     public void submenuLibros() {
         System.out.println("\n--- LIBROS ---");
         System.out.println("1. Consultar libros");
-        System.out.println("2. Dar de alta libro");
-        System.out.println("3. Dar de baja libro");
-        System.out.println("4. Modificar libro");
-        System.out.println("5. CATEGORIAS");
+        System.out.println("2. Consultar libros por categoria");
+        System.out.println("3. Dar de alta libro");
+        System.out.println("4. Dar de baja libro");
+        System.out.println("5. Modificar libro");
+        System.out.println("6. CATEGORIAS");
         System.out.println("0. Volver");
         System.out.print("Selecciona una opci\u00f3n: ");
     }

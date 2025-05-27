@@ -17,8 +17,8 @@ public interface CategoriaDAO {
 
     boolean delete(int id);
 
-    boolean find(int id);
+    boolean exists(int id);
 
-    Categoria getCategoria(int id);
+    Categoria readOne(int id);
 
 }

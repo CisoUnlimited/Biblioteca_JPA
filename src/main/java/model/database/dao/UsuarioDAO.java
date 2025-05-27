@@ -1,6 +1,5 @@
 package model.database.dao;
 
-import model.dto.Libro;
 import model.dto.Usuario;
 import java.util.List;
 
@@ -18,8 +17,8 @@ public interface UsuarioDAO {
 
     boolean delete(int id);
 
-    boolean find(int id);
+    boolean exists(int id);
 
-    Usuario getUsuario(int id);
+    Usuario readOne(int id);
 
 }

@@ -13,12 +13,14 @@ public interface LibroDAO {
 
     List<Libro> read();
 
+    List<Libro> readByCategory(int id);
+
     boolean update(int id, Libro libro);
 
     boolean delete(int id);
 
-    boolean find(int id);
+    boolean exists(int id);
 
-    Libro getLibro(int id);
+    Libro readOne(int id);
 
 }

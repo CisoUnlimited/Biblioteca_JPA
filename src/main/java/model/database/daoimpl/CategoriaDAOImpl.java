@@ -88,7 +88,7 @@ public class CategoriaDAOImpl implements CategoriaDAO {
     }
 
     @Override
-    public boolean find(int id) {
+    public boolean exists(int id) {
         try (EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager()) {
             return em.find(Categoria.class, id) != null;
         }
@@ -96,7 +96,7 @@ public class CategoriaDAOImpl implements CategoriaDAO {
 
 
     @Override
-    public Categoria getCategoria(int id) {
+    public Categoria readOne(int id) {
         try (EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager()) {
             Categoria categoria = em.find(Categoria.class, id);
             return categoria;

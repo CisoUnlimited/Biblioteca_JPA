@@ -14,11 +14,13 @@ public interface PrestamoDAO {
 
     List<Prestamo> read();
 
-    Prestamo readOne(int id);
-
     boolean update(int id, Prestamo prestamo);
 
     boolean delete(int idPrestamo);
+
+    boolean exists(int id);
+
+    Prestamo readOne(int id);
 
     boolean isAvailable(Libro libro);
 

@@ -6,6 +6,7 @@ import jakarta.persistence.Query;
 import model.dto.Libro;
 import model.dto.Prestamo;
 import model.database.dao.PrestamoDAO;
+import model.dto.Usuario;
 import utils.JPAUtil;
 
 import java.sql.*;
@@ -49,7 +50,7 @@ public class PrestamoDAOImpl implements PrestamoDAO {
     @Override
     public List<Prestamo> read() {
         try (EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager()) {
-            Query q = em.createQuery("SELECT p FROM Prestamo p");
+            Query q = em.createQuery("SELECT p FROM Prestamo p Order by idLibro.nombre");
             return q.getResultList();
         } catch (Exception e) {
             e.printStackTrace();
@@ -59,10 +60,15 @@ public class PrestamoDAOImpl implements PrestamoDAO {
 
     @Override
     public Prestamo readOne(int id) {
-        return null;
+        try (EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager()) {
+            Prestamo prestamo = em.find(Prestamo.class, id);
+            return prestamo;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
-    // TODO POR AQUI ME HE QUEDADO REVISAR
     @Override
     public boolean update(int id, Prestamo prestamoModificado) {
         try (EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager()) {
@@ -127,4 +133,16 @@ public class PrestamoDAOImpl implements PrestamoDAO {
         }
     }
 
+    @Override
+    public boolean exists(int id) {
+        try(EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager()) {
+            if (em.find(Prestamo.class, id) != null) {
+                return true;
+            }
+            return false;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

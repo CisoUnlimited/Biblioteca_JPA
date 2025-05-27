@@ -57,6 +57,18 @@ public class LibroDAOImpl implements LibroDAO {
         }
     }
 
+    // TODO CREAR METODO PARA MOSTRAR TODOS LOS LIBROS DE UNA CATEGORIA DADA
+    @Override
+    public List<Libro> readByCategory(int id) {
+        try (EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager()) {
+            Query q = em.createQuery("SELECT l FROM Libro l");
+            return q.getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+
     @Override
     public boolean update(int id, Libro libroModificado) {
         try (EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager()) {
@@ -94,14 +106,14 @@ public class LibroDAOImpl implements LibroDAO {
     }
 
     @Override
-    public boolean find(int id) {
+    public boolean exists(int id) {
         try (EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager()) {
             return em.find(Libro.class, id) != null;
         }
     }
 
     @Override
-    public Libro getLibro(int id) {
+    public Libro readOne(int id) {
         try (EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager()) {
             Libro libro = em.find(Libro.class, id);
             return libro;
