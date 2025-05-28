@@ -2,6 +2,8 @@ package model.database.dao;
 
 import model.dto.Libro;
 import model.dto.Prestamo;
+import model.dto.Usuario;
+
 import java.util.List;
 
 /**
@@ -22,7 +24,9 @@ public interface PrestamoDAO {
 
     Prestamo readOne(int id);
 
-    boolean isAvailable(Libro libro);
+    boolean isBookAvailable(Libro libro);
+
+    boolean isUserAvailable(Usuario usuario);
 
     int getIdPrestamo(Libro libro);
 

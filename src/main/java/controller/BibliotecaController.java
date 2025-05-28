@@ -202,10 +202,14 @@ public class BibliotecaController {
             int id = scanner.nextInt();
             scanner.nextLine();
             if (usuarioDAO.exists(id)) {
-                if (usuarioDAO.delete(id)) {
-                    System.out.println("Usuario eliminado con éxito.");
+                if (prestamoDAO.isUserAvailable(usuarioDAO.readOne(id))) {
+                    if (usuarioDAO.delete(id)) {
+                        System.out.println("Usuario eliminado con éxito.");
+                    } else {
+                        System.out.println("Error al eliminar el usuario.");
+                    }
                 } else {
-                    System.out.println("Error al eliminar el usuario.");
+                    System.out.println("Error al eliminar el usuario. Compruebe préstamos pendientes.");
                 }
             } else {
                 System.out.println("El ID introducido no se encuentra en la base de datos.");
@@ -306,11 +310,15 @@ public class BibliotecaController {
             int id = scanner.nextInt();
             scanner.nextLine();
             if (libroDAO.exists(id)) {
-                if (libroDAO.delete(id)) {
-                    System.out.println("Libro eliminado con éxito.");
+                Libro libro = libroDAO.readOne(id);
+                if (prestamoDAO.isBookAvailable(libro)) {
+                    if (libroDAO.delete(id)) {
+                        System.out.println("Libro eliminado con éxito.");
+                    } else {
+                        System.out.println("Error al eliminar el libro.");
+                    }
                 } else {
-                    System.out.println("El ID introducido no se encuentra en la base de datos.");
-                    System.out.println("Error al eliminar el libro.");
+                    System.out.println("Error al eliminar el libro. Compruebe préstamos pendientes.");
                 }
             } else {
                 System.out.println("El ID introducido no se encuentra en la base de datos.");
@@ -393,10 +401,14 @@ public class BibliotecaController {
             int id = scanner.nextInt();
             scanner.nextLine();
             if (categoriaDAO.exists(id)) {
-                if (categoriaDAO.delete(id)) {
-                    System.out.println("Categoría eliminada con éxito.");
+                if (libroDAO.readByCategory(categoriaDAO.readOne(id)).isEmpty()) {
+                    if (categoriaDAO.delete(id)) {
+                        System.out.println("Categoría eliminada con éxito.");
+                    } else {
+                        System.out.println("Error al eliminar la categoría.");
+                    }
                 } else {
-                    System.out.println("Error al eliminar la categoría.");
+                    System.out.println("Error al eliminar la categoría. Compruebe que no pertenezca a ningún libro.");
                 }
             } else {
                 System.out.println("El ID introducido no se encuentra en la base de datos.");
@@ -461,7 +473,7 @@ public class BibliotecaController {
 
         Libro libro = libroDAO.readOne(idLibro);
 
-        if (!prestamoDAO.isAvailable(libro)) {
+        if (!prestamoDAO.isBookAvailable(libro)) {
             System.out.println("El libro ya está prestado.");
             return;
         }
@@ -537,7 +549,7 @@ public class BibliotecaController {
             }
             Libro nuevoLibro = libroDAO.readOne(idLibro);
 
-            if (!prestamoDAO.isAvailable(nuevoLibro)) {
+            if (!prestamoDAO.isBookAvailable(nuevoLibro)) {
                 System.out.println("El libro ya está prestado.");
                 return;
             }

@@ -103,10 +103,22 @@ public class PrestamoDAOImpl implements PrestamoDAO {
     }
 
     @Override
-    public boolean isAvailable(Libro libro) {
+    public boolean isBookAvailable(Libro libro) {
         try (EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager()) {
             Query q = em.createQuery("SELECT p FROM Prestamo p where p.idLibro = :idLibro");
             q.setParameter("idLibro", libro);
+            return q.getResultList().isEmpty();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    public boolean isUserAvailable(Usuario usuario) {
+        try (EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager()) {
+            Query q = em.createQuery("SELECT p FROM Prestamo p where p.idUsuario = :idUsuario");
+            q.setParameter("idUsuario", usuario);
             return q.getResultList().isEmpty();
         } catch (Exception e) {
             e.printStackTrace();
