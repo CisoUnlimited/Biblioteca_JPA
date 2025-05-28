@@ -102,7 +102,7 @@ public class BibliotecaController {
             try {
                 switch (opcion) {
                     case 1 -> consultarLibros();
-                    case 2 -> consultarLibrosPorCategoria();
+                    case 2 -> consultarLibrosPorCategoria(scanner);
                     case 3 -> altaLibro(scanner);
                     case 4 -> bajaLibro(scanner);
                     case 5 -> modificarLibro(scanner);
@@ -252,11 +252,16 @@ public class BibliotecaController {
         }
     }
 
-    private boolean consultarLibrosPorCategoria() {
+    private boolean consultarLibrosPorCategoria(Scanner scanner) {
         System.out.println("\n--- Listar todos los libros de una categoria ---");
-        List<Libro> libros = libroDAO.read();
+        consultarCategorias();
+        System.out.println("Seleccione una categoria: ");
+        int cat = scanner.nextInt();
+        scanner.nextLine();
+        Categoria categoria = categoriaDAO.readOne(cat);
+        List<Libro> libros = libroDAO.readByCategory(categoria);
         if (libros.isEmpty()) {
-            System.out.println("No hay libros registrados.");
+            System.out.println("No hay libros registrados con esa categoria.");
             return false;
         } else {
             for (Libro libro : libros) {

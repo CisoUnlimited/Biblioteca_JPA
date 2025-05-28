@@ -3,6 +3,7 @@ package model.database.daoimpl;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Query;
+import model.dto.Categoria;
 import model.dto.Libro;
 import model.database.dao.LibroDAO;
 import utils.JPAUtil;
@@ -59,9 +60,10 @@ public class LibroDAOImpl implements LibroDAO {
 
     // TODO CREAR METODO PARA MOSTRAR TODOS LOS LIBROS DE UNA CATEGORIA DADA
     @Override
-    public List<Libro> readByCategory(int id) {
+    public List<Libro> readByCategory(Categoria categoria) {
         try (EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager()) {
-            Query q = em.createQuery("SELECT l FROM Libro l");
+            Query q = em.createQuery("SELECT l FROM Libro l where l.categoria = :categoria");
+            q.setParameter("categoria", categoria);
             return q.getResultList();
         } catch (Exception e) {
             e.printStackTrace();

@@ -1,5 +1,6 @@
 package model.database.dao;
 
+import model.dto.Categoria;
 import model.dto.Libro;
 import java.util.List;
 
@@ -13,7 +14,7 @@ public interface LibroDAO {
 
     List<Libro> read();
 
-    List<Libro> readByCategory(int id);
+    List<Libro> readByCategory(Categoria categoria);
 
     boolean update(int id, Libro libro);
 
